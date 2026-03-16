@@ -1,0 +1,14 @@
+-rootPath
+E:/SongImporter/SongImporterExe
+-cmake-output
+-output-file
+E:/SongImporter/SongImporterExe/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/.qt/qml_imports/appSongImporterExe_conf.cmake
+-importPath
+E:/SongImporter/SongImporterExe/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/SongImporterExe
+-importPath
+E:/SongImporter/SongImporterExe/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug
+-importPath
+C:/Qt/6.10.1/mingw_64/qml
+-qrcFiles
+E:/SongImporter/SongImporterExe/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/.qt/rcc/qmake_SongImporterExe.qrc
+E:/SongImporter/SongImporterExe/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/.qt/rcc/appSongImporterExe_raw_qml_0.qrc

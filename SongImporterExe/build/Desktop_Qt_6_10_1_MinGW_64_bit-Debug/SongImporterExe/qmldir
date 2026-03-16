@@ -1,0 +1,6 @@
+module SongImporterExe
+typeinfo appSongImporterExe.qmltypes
+prefer :/qt/qml/SongImporterExe/
+Main 254.0 Main.qml
+depends QtQuick
+

@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/qt/qml/SongImporterExe/">
+    <file alias="Main.qml">E:/SongImporter/SongImporterExe/Main.qml</file>
+  </qresource>
+</RCC>
+
