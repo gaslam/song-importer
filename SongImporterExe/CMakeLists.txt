@@ -29,9 +29,15 @@ set_target_properties(appSongImporterExe PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-target_link_libraries(appSongImporterExe
-    PRIVATE Qt6::Quick
+target_include_directories(appSongImporterExe
+    PUBLIC ${CMAKE_SOURCE_DIR}/SongImporterLib
 )
+
+target_link_libraries(appSongImporterExe
+    PRIVATE SongImporterLib Qt6::Quick
+)
+
+
 
 include(GNUInstallDirs)
 install(TARGETS appSongImporterExe

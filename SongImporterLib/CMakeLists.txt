@@ -11,7 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
-add_library(SongImporterLib STATIC
+add_library(SongImporterLib SHARED
+  SongImporterLib_global.h
   SongImporterLib.cpp
   SongImporterLib.h
 )

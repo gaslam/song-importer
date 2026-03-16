@@ -1,5 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <SongImporterLib_global.h>
+#include <SongImporterLib.h>
 
 int main(int argc, char *argv[])
 {

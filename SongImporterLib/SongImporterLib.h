@@ -1,7 +1,9 @@
 #ifndef SONGIMPORTERLIB_H
 #define SONGIMPORTERLIB_H
 
-class SongImporterLib
+#include "SongImporterLib_global.h"
+
+class SONGIMPORTERLIB_EXPORT SongImporterLib
 {
 public:
     SongImporterLib();
