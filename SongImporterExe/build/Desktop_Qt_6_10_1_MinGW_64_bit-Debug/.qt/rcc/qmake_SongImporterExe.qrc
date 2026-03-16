@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/qt/qml/SongImporterExe">
-    <file alias="qmldir">E:/SongImporter/SongImporterExe/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/SongImporterExe/qmldir</file>
-  </qresource>
-</RCC>
-
