@@ -17,6 +17,7 @@ qt_add_qml_module(appSongImporterExe
     QML_FILES
         Main.qml
         QML_FILES InputDialog.qml
+        QML_FILES FolderInput.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

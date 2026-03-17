@@ -12,21 +12,17 @@ Item {
     property double actualWidth: parent.width === null ? minWidth : Math.max(parent.width,minWidth)
 
     signal buttonClicked()
+    signal inputTextChanged(string text)
     implicitWidth:layout.implicitWidth
     implicitHeight: layout.implicitHeight
     width: actualWidth
 
-
-    ListModel {
-        id: errorModel
+    function setError(msg) {
+     errorText.text = msg;
     }
 
-    function addError(msg) {
-        errorModel.append({ message: msg })
-    }
-
-    function clearErrors() {
-        errorModel.clear()
+    function clearError() {
+     errorText.text = "";
     }
 
     GridLayout {
@@ -62,6 +58,11 @@ Item {
             color: "#141613"
             Layout.fillWidth: true
             Layout.minimumWidth: actualWidth - directoryButton.width - layout.columnSpacing
+            onTextEdited:{
+                valueText = text
+                inputTextChanged(text);
+            }
+
             background: Rectangle {
                 id:rectangle
                 border.color: "#141613"
@@ -82,33 +83,24 @@ Item {
                 }
             }
         }
-
-        ListView {
-            id: errorList
-            Layout.column: 0
-            Layout.row: 2
-            Layout.columnSpan: 2
-            Layout.fillWidth: true
-            implicitHeight: contentHeight
-            height: implicitHeight
-            model: errorModel
-
-            delegate: Rectangle {
-                width: errorList.width
-                height: textItem.implicitHeight
+        Rectangle {
+                height: errorText.implicitHeight
                 color: "transparent"
+                Layout.column: 0
+                Layout.row: 2
+                Layout.columnSpan: 2
+                Layout.fillWidth: true
 
                 Text {
-                    id: textItem
+                    id: errorText
                     anchors.fill: parent
                     anchors.margins: 3
-                    text: model.message
+                    text: ""
                     color: "red"
                     font.pointSize: 8
                     wrapMode: Text.WordWrap
                 }
             }
-        }
 
         Button {
             id: directoryButton

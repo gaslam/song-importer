@@ -13,8 +13,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 add_library(SongImporterLib SHARED
   SongImporterLib_global.h
-  SongImporterLib.cpp
-  SongImporterLib.h
+  InputValidator.cpp
+  InputValidator.h
+  FolderValidator.h FolderValidator.cpp
 )
 
 target_link_libraries(SongImporterLib PRIVATE Qt${QT_VERSION_MAJOR}::Core)
