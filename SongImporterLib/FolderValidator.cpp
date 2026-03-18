@@ -12,19 +12,19 @@ ValidationResult FolderValidator::validate(const QString &input) const
 
     if(input.isNull() || input.isEmpty())
     {
-        return fail("Directory is empty. Enter a valid directory!");
+        return failResult("Directory is empty. Enter a valid directory!",result);
     }
 
     QDir actualDirectory{input};
 
     if(!actualDirectory.exists())
     {
-        return fail("Directory does not exist. Enter a valid directory!");
+        return failResult("Directory does not exist. Enter a valid directory!",result);
     }
 
     if(!actualDirectory.isReadable() || actualDirectory.isEmpty())
     {
-        return fail("Directory is not readable. Enter a valid directory!");
+        return failResult("Directory is not readable. Enter a valid directory!",result);
     }
 
     result.isSuccessful = true;
