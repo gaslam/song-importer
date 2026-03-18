@@ -31,6 +31,9 @@ public:
     InputValidator(QObject* parent = nullptr);
 public slots:
     [[nodiscard]] virtual ValidationResult validate(const QString& input) const = 0;
+
+protected:
+    [[nodiscard]] ValidationResult failResult(const QString& input,ValidationResult& result) const;
 };
 
 #endif // INPUTVALIDATOR_H

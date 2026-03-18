@@ -11,7 +11,7 @@ public:
 
 
 public slots:
-    [[nodiscard]] ValidationResult validate(const QString &input) const override;
+    [[nodiscard]] inline ValidationResult validate(const QString &input) const override;
 };
 
 #endif // FOLDERVALIDATOR_H
