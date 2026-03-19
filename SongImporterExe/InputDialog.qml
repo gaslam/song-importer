@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Fusion
 import QtQuick.Layouts
 
 Item {
@@ -46,6 +46,7 @@ Item {
         TextField{
             id:inputTextField
             text: valueText
+            activeFocusOnTab: true
             Layout.column: 0
             Layout.row:1
             font.pointSize: 10
@@ -69,6 +70,12 @@ Item {
                 border.width: 1.5
                 radius: 3
                 color: "transparent"
+                Behavior on color {
+                     ColorAnimation {
+                         duration: 150   // milliseconds
+                         easing.type: Easing.InOutQuad
+                     }
+                 }
             }
             onActiveFocusChanged: {
                 var color = "#141613";
@@ -108,13 +115,17 @@ Item {
             Layout.column: 1
             Layout.row: 1
             onClicked: buttonClicked()
+            onPressed: changeColor(true)
+            onReleased: changeColor(false)
 
             background: Rectangle {
+                id:buttonRectangle
                 implicitWidth: fileDirectoryText.implicitWidth + 8
                 implicitHeight: fileDirectoryText.implicitHeight + 8
                 border.width: 1.5
                 radius: 3
                 color: "#141613"
+                activeFocusOnTab: true
 
                 Text {
                     id: fileDirectoryText
@@ -125,6 +136,26 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     color: "#CECCCC"
                     font.bold: true
+                }
+
+                Behavior on color {
+                     ColorAnimation {
+                         duration: 150   // milliseconds
+                         easing.type: Easing.InOutQuad
+                     }
+                 }
+            }
+
+            function changeColor(isPressed)
+            {
+                var color = "#141613";
+                if(isPressed)
+                {
+                    buttonRectangle.color = color + "22"; //transparent
+                }
+                else
+                {
+                    buttonRectangle.color = "black"
                 }
             }
         }
