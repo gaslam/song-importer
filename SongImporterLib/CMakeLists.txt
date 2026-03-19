@@ -17,6 +17,7 @@ add_library(SongImporterLib SHARED
   InputValidator.h
   FolderValidator.h FolderValidator.cpp
   FileValidator.h FileValidator.cpp
+  FileUtils.h
 )
 
 target_link_libraries(SongImporterLib PRIVATE Qt${QT_VERSION_MAJOR}::Core)
