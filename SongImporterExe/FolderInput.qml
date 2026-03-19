@@ -1,4 +1,6 @@
 import QtQuick
+import QtQuick.Dialogs
+import SongImporter.Utils
 import SongImporter.Validators
 
 Item {
@@ -7,11 +9,29 @@ Item {
     id:validator
     }
 
+    FolderDialog{
+        id:folderDialog
+
+
+        onAccepted: {
+            inputDialog.valueText = FileUtils.localPath(selectedFolder)
+            inputDialog.startValidation()
+        }
+    }
+
+    property string headerText:"folder location"
+    property string buttonText:"Select"
+    property double minWidth: 250
+    property bool isValid:false
+
 InputDialog{
     id:inputDialog
-    headerText: "Export location"
+    headerText: root.headerText
+    buttonText: root.buttonText
+    minWidth: root.minWidth
+
     onButtonClicked: {
-        startValidation();
+        folderDialog.open()
     }
     onInputTextChanged: {
         startValidation();
@@ -26,6 +46,8 @@ InputDialog{
         else{
             clearError()
         }
+
+        root.isValid = result.isSuccessful
     }
 }
 
