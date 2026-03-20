@@ -55,6 +55,7 @@ Item {
         headerText: root.headerText
         buttonText: root.buttonText
         minWidth: root.minWidth
+        valueText: FileUtils.softwareDataLocation(FileUtils.Rekordbox)
 
         onButtonClicked: {
             fileDialog.open();
