@@ -50,6 +50,8 @@ Item {
         id:validator
     }
 
+    height: inputDialog.height
+
     InputDialog{
         id:inputDialog
         headerText: root.headerText

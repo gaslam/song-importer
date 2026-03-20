@@ -24,6 +24,8 @@ Item {
     property double minWidth: 250
     property bool isValid:false
 
+    height: inputDialog.height
+
 InputDialog{
     id:inputDialog
     headerText: root.headerText
