@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.5)
 
 project(SongImporterExe VERSION 0.1 LANGUAGES CXX)
 
@@ -7,10 +7,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
 qt_standard_project_setup(REQUIRES 6.8)
+ set(app_icon "")
+
+ if(WIN32)
+     set(app_icon "${CMAKE_CURRENT_SOURCE_DIR}/Resources/SongImporter.rc")
+ endif()
 
 qt_add_executable(appSongImporterExe
-    main.cpp
+    main.cpp ${app_icon}
 )
+
 
 qt_add_qml_module(appSongImporterExe
     URI SongImporterExe
