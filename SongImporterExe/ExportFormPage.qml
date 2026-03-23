@@ -26,6 +26,7 @@ Page {
                     id:folderInput
                     Layout.fillWidth: true
                     minWidth: 200
+                    inputText: FileUtils.musicFolder()
                 }
             }
 

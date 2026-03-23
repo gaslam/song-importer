@@ -28,6 +28,11 @@ public slots:
         return input.toLocalFile();
     }
 
+    [[nodiscard]] inline static QString musicFolder()
+    {
+        return QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+    }
+
     [[nodiscard]] inline static QString softwareDataLocation(const SupportedSoftware& software)
     {
         QDir installDir{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)};

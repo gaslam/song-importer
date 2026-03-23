@@ -21,6 +21,7 @@ Item {
 
     property string headerText:"folder location"
     property string buttonText:"Select"
+    property string inputText: "c:/"
     property double minWidth: 250
     property bool isValid:false
 
@@ -31,6 +32,7 @@ InputDialog{
     headerText: root.headerText
     buttonText: root.buttonText
     minWidth: root.minWidth
+    valueText: root.inputText
 
     onButtonClicked: {
         folderDialog.open()
