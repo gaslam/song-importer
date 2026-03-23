@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import SongImporter.Utils
 
 Page {
     Rectangle {
@@ -18,7 +19,9 @@ Page {
                 FileInput {
                     id:fileInput
                     minWidth: 200
-                    Layout.fillWidth: true }
+                    Layout.fillWidth: true
+                    inputText: FileUtils.softwareDataLocation(FileUtils.Rekordbox)
+                    }
                 FolderInput{
                     id:folderInput
                     Layout.fillWidth: true

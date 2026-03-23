@@ -1,6 +1,5 @@
 import QtQuick
 import SongImporter.Validators
-import SongImporter.Utils
 import QtQuick.Dialogs
 
 Item {
@@ -13,6 +12,7 @@ Item {
 
     property string headerText:"file location"
     property string buttonText:"Select"
+    property string inputText:"example.xml"
     property double minWidth: 250
     property bool isValid:false
 
@@ -57,7 +57,7 @@ Item {
         headerText: root.headerText
         buttonText: root.buttonText
         minWidth: root.minWidth
-        valueText: FileUtils.softwareDataLocation(FileUtils.Rekordbox)
+        valueText: root.inputText
 
         onButtonClicked: {
             fileDialog.open();
