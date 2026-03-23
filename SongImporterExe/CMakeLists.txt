@@ -4,7 +4,9 @@ project(SongImporterExe VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick Svg)
+
+set(CMAKE_AUTORCC ON)
 
 qt_standard_project_setup(REQUIRES 6.8)
  set(app_icon "")
@@ -14,7 +16,7 @@ qt_standard_project_setup(REQUIRES 6.8)
  endif()
 
 qt_add_executable(appSongImporterExe
-    main.cpp ${app_icon}
+    main.cpp ${app_icon} Resources/resources.qrc
 )
 
 
@@ -26,6 +28,8 @@ qt_add_qml_module(appSongImporterExe
         QML_FILES FolderInput.qml
         QML_FILES FileInput.qml
         QML_FILES ExportFormPage.qml
+        RESOURCES Resources/resources.qrc
+        QML_FILES ImporterDropArea.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -44,7 +48,7 @@ target_include_directories(appSongImporterExe
 )
 
 target_link_libraries(appSongImporterExe
-    PRIVATE SongImporterLib Qt6::Quick
+    PRIVATE SongImporterLib Qt6::Quick Qt6::Svg
 )
 
 
