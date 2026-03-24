@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     qmlRegisterType<FolderValidator>("SongImporter.Validators", 1, 0, "FolderValidator");
-    qRegisterMetaType<ValidationResult>("validationResult");
+    qRegisterMetaType<OperationResult>("operationResult");
     qmlRegisterType<FileValidator>("SongImporter.Validators", 1, 0, "FileValidator");
     qmlRegisterSingletonType<FileUtils>("SongImporter.Utils", 1, 0, "FileUtils",
                                         [&app](QQmlEngine *, QJSEngine *) -> QObject* {

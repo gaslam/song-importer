@@ -3,23 +3,8 @@
 
 #include "SongImporterLib_global.h"
 
-#include <QList>
 #include <QObject>
-#include <qobjectdefs.h>
-#include <qsharedpointer.h>
-
-
-struct SONGIMPORTERLIB_EXPORT ValidationResult
-{
-    Q_GADGET
-    Q_PROPERTY(QString error  MEMBER error)
-    Q_PROPERTY(bool isSuccessful  MEMBER isSuccessful)
-public:
-
-    QString error{};
-    bool isSuccessful{false};
-};
-Q_DECLARE_METATYPE(ValidationResult)
+#include "OperationResult.h"
 
 
 
@@ -30,10 +15,10 @@ class SONGIMPORTERLIB_EXPORT InputValidator : public QObject
 public:
     InputValidator(QObject* parent = nullptr);
 public slots:
-    [[nodiscard]] virtual ValidationResult validate(const QString& input) const = 0;
+    [[nodiscard]] virtual OperationResult validate(const QString& input) const = 0;
 
 protected:
-    [[nodiscard]] ValidationResult failResult(const QString& input,ValidationResult& result) const;
+    [[nodiscard]] OperationResult failResult(const QString& input,OperationResult& result) const;
 };
 
 #endif // INPUTVALIDATOR_H

@@ -18,6 +18,7 @@ add_library(SongImporterLib SHARED
   FolderValidator.h FolderValidator.cpp
   FileValidator.h FileValidator.cpp
   FileUtils.h
+  OperationResult.h
 )
 
 target_compile_definitions(SongImporterLib PRIVATE SONGIMPORTERLIB_LIBRARY)

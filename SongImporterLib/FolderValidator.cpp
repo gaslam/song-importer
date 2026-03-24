@@ -6,9 +6,9 @@ FolderValidator::FolderValidator(QObject *parent)
     : InputValidator{parent}
 {}
 
-ValidationResult FolderValidator::validate(const QString &input) const
+OperationResult FolderValidator::validate(const QString &input) const
 {
-    ValidationResult result{};
+    OperationResult result{};
 
     if(input.isNull() || input.isEmpty())
     {

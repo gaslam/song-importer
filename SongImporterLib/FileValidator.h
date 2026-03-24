@@ -13,7 +13,7 @@ public:
     void setSupportedFileTypes(const QStringList &newSupportedFileTypes);
 
 public slots:
-    [[nodiscard]] ValidationResult validate(const QString &input) const override;
+    [[nodiscard]] OperationResult validate(const QString &input) const override;
 
 private:
     QStringList m_SupportedFileTypes;

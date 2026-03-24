@@ -1,15 +1,16 @@
 #include "FileValidator.h"
 
 #include <QFileInfo>
+#include <quazip/quazip.h>
 
 FileValidator::FileValidator(QObject *parent)
     : InputValidator{parent}
 {}
 
-ValidationResult FileValidator::validate(const QString &input) const
+OperationResult FileValidator::validate(const QString &input) const
 {
     QFileInfo fileInfo{input};
-    ValidationResult result{};
+    OperationResult result{};
 
     if(!fileInfo.exists())
     {
