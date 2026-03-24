@@ -19,6 +19,7 @@ add_library(SongImporterLib SHARED
   FileValidator.h FileValidator.cpp
   FileUtils.h
   OperationResult.h
+  FileReceiver.h FileReceiver.cpp
 )
 
 target_compile_definitions(SongImporterLib PRIVATE SONGIMPORTERLIB_LIBRARY)
