@@ -46,7 +46,7 @@ REM Deploy application with winqtdeploy and specify the qml directories
 
 ECHO deploying application
 
-windeployqt "%TARGET_FOLDER%%TARGET_FILE%" --qmldir "%QML_DIR%"
+windeployqt --no-translations --no-opengl-sw --no-system-d3d-compiler --no-network "%TARGET_FOLDER%%TARGET_FILE%" --qmldir "%QML_DIR%"
 
 REM Copy DLL of the library to the new location
 
