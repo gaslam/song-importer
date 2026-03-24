@@ -1,5 +1,6 @@
 import QtQuick
 import SongImporter.Validators
+import SongImporter.Utils
 import QtQuick.Dialogs
 
 Item {
