@@ -1,0 +1,13 @@
+prefix=C:/Users/gaspa/Downloads/zlib-1.3.1/build/install
+exec_prefix=C:/Users/gaspa/Downloads/zlib-1.3.1/build/install
+libdir=C:/Users/gaspa/Downloads/zlib-1.3.1/build/install/lib
+sharedlibdir=C:/Users/gaspa/Downloads/zlib-1.3.1/build/install/lib
+includedir=C:/Users/gaspa/Downloads/zlib-1.3.1/build/install/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.3.1
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}

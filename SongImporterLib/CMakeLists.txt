@@ -20,6 +20,20 @@ add_library(SongImporterLib SHARED
   FileUtils.h
 )
 
-target_link_libraries(SongImporterLib PRIVATE Qt${QT_VERSION_MAJOR}::Core)
-
 target_compile_definitions(SongImporterLib PRIVATE SONGIMPORTERLIB_LIBRARY)
+
+
+
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/zlib/lib")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/zlib/include")
+
+target_include_directories(SongImporterLib PRIVATE ${ZLIB_INCLUDE_DIR})
+target_link_directories(SongImporterLib PRIVATE ${ZLIB_LIBRARY})
+find_package(ZLIB REQUIRED)
+
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/quazip/lib/cmake/QuaZip-Qt6-1.5")
+
+find_package(QuaZip-Qt6 REQUIRED)
+
+
+target_link_libraries(SongImporterLib PRIVATE Qt${QT_VERSION_MAJOR}::Core ZLIB::ZLIB QuaZip::QuaZip)
