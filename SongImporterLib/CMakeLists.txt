@@ -36,5 +36,8 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/quazip/lib/cmake/Q
 
 find_package(QuaZip-Qt6 REQUIRED)
 
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/taglib/lib/cmake/taglib")
+find_package(TagLib REQUIRED)
 
-target_link_libraries(SongImporterLib PRIVATE Qt${QT_VERSION_MAJOR}::Core ZLIB::ZLIB QuaZip::QuaZip)
+target_link_libraries(SongImporterLib PRIVATE ZLIB::ZLIB QuaZip::QuaZip TagLib::tag)
+target_link_libraries(SongImporterLib PRIVATE Qt${QT_VERSION_MAJOR}::Core)
