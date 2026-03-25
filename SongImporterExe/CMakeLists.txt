@@ -30,6 +30,7 @@ qt_add_qml_module(appSongImporterExe
         QML_FILES ExportFormPage.qml
         RESOURCES Resources/resources.qrc
         QML_FILES ImporterDropArea.qml
+        QML_FILES ContactModel.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
