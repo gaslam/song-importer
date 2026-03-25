@@ -2,4 +2,7 @@
     <qresource prefix="/icons">
         <file>file-icon.svg</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>logo-icon.png</file>
+    </qresource>
 </RCC>
