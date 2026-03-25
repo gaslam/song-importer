@@ -10,7 +10,7 @@
 
 FileReceiver::FileReceiver() {}
 
-Song FileReceiver::getSongFromFile(const QUrl &file)
+OperationResult FileReceiver::getSongFromFile(const QUrl &file,Song& song)
 {
     QString path{file.path()};
 #ifdef Q_OS_WIN
@@ -20,16 +20,13 @@ Song FileReceiver::getSongFromFile(const QUrl &file)
     const QFileInfo info{path};
     const QString suffixLower{info.suffix().toLower()};
 
-    Song song;
-
     OperationResult result{};
-    Q_UNUSED(result)
 
     if(info.suffix().toLower() == "zip")
     {
         result = FileUtils::isZipFile(file);
 
-        if(!result.isSuccessful) return song;
+        if(!result.isSuccessful) return result;
     }
 
     TagLib::FileRef f{path.toUtf8().constData()};
@@ -39,20 +36,19 @@ Song FileReceiver::getSongFromFile(const QUrl &file)
         OperationResult result{};
         result.isSuccessful = false;
         result.error = "Cannot read file at location " + path;
-        return song;
+        return result;
     }
     TagLib::File* audioFile{f.file()};
 
     if(info.suffix() == "mp3")
     {
-        auto test = getSongFromMP3(audioFile,song);
-        Q_UNUSED(test);
-        return song;
+        result = getSongFromMP3(audioFile,song);
+        return result;
     }
 
     result.error = "Cannot read audio file!";
     result.isSuccessful = false;
-    return song;
+    return result;
 }
 
 OperationResult FileReceiver::getSongFromMP3( TagLib::File *file,Song& song)
@@ -95,9 +91,11 @@ OperationResult FileReceiver::getSongFromMP3( TagLib::File *file,Song& song)
 void FileReceiver::extractTagFromSong(TagLib::Tag *tag, const TagLib::FileName &filename,Song& song)
 {
     song.artists = tag->artist().toCString();
+    song.album = tag->album().toCString();
     song.fileName = filename.toString().toCString();
     song.title = tag->title().toCString();
     song.year = tag->year();
+    song.albumCover = QUrl{"qrc:/icons/logo-icon.png"};
 }
 
 

@@ -14,10 +14,13 @@ struct SONGIMPORTERLIB_EXPORT Song {
     Q_PROPERTY(QString title MEMBER title)
     Q_PROPERTY(QString artists MEMBER artists)
     Q_PROPERTY(QString filename MEMBER fileName)
-     Q_PROPERTY(unsigned int year MEMBER year)
+    Q_PROPERTY(QString album MEMBER album)
+    Q_PROPERTY(QUrl albumCover MEMBER albumCover)
+    Q_PROPERTY(unsigned int year MEMBER year)
 public:
     unsigned int year;
     QString title;
+    QString album;
     QUrl albumCover;
     QString artists;
     QString fileName;
