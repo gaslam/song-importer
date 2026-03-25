@@ -6,6 +6,8 @@ Rectangle {
     color: "white"
     opacity: 0
 
+    signal dropped(DragEvent drop )
+
     Behavior on opacity {
         NumberAnimation {
             duration: 200
@@ -30,8 +32,9 @@ Rectangle {
         onExited: {
             root.opacity = 0
         }
-        onDropped:{
+        onDropped: function(drop) {
             root.opacity = 0
+            root.dropped(drop)
         }
     }
 }
