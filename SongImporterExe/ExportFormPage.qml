@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import SongImporter.Utils
 import SongImporter.FileReceiver
 import QtQuick.Dialogs
+import SongImporter.SongListModel
 
 Page {
     Rectangle {
@@ -32,16 +33,24 @@ Page {
                 }
             }
             SongTable{
+                id:songTable
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 ImporterDropArea{
                 onDropped: function(drop) {
                     for(const fileurl of drop.urls)
                     {
-                       let song = fileReceiver.getSongFromFile(fileurl)
-                        console.log(song.title)
+                       songTable.addSongsFromFileToList(fileurl)
                     }
                 }
+                }
+            }
+
+            Connections {
+                target: SongListModel
+
+                function onErrorReceived(error) {
+                    errorDialog.informativeText = error
                 }
             }
 
@@ -49,12 +58,7 @@ Page {
 
         MessageDialog{
             id:errorDialog
-            text: "A song was detected"
-
-        }
-
-        FileReceiver {
-            id:fileReceiver
+            text: "A error has occured"
 
         }
 
