@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import SongImporter.Utils
+import SongImporter.FileReceiver
+import QtQuick.Dialogs
 
 Page {
     Rectangle {
@@ -29,15 +31,33 @@ Page {
                     inputText: FileUtils.musicFolder()
                 }
             }
-            Rectangle{
+            SongTable{
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color:"green"
                 ImporterDropArea{
-
+                onDropped: function(drop) {
+                    for(const fileurl of drop.urls)
+                    {
+                       let song = fileReceiver.getSongFromFile(fileurl)
+                        console.log(song.title)
+                    }
+                }
                 }
             }
 
         }
+
+        MessageDialog{
+            id:errorDialog
+            text: "A song was detected"
+
+        }
+
+        FileReceiver {
+            id:fileReceiver
+
+        }
+
+
     }
 }
