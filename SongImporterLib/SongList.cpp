@@ -62,6 +62,7 @@ void SongList::extractSongsFromFile(const QUrl &file)
     if(!result.isSuccessful)
     {
         emit errorReceived(result.error);
+        return;
     }
 
     addSong(song);

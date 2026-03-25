@@ -51,6 +51,7 @@ Page {
 
                 function onErrorReceived(error) {
                     errorDialog.informativeText = error
+                    errorDialog.open();
                 }
             }
 
