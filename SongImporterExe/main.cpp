@@ -5,13 +5,16 @@
 #include <FolderValidator.h>
 #include <FileValidator.h>
 #include <FileUtils.h>
+#include <FileReceiver.h>
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     qmlRegisterType<FolderValidator>("SongImporter.Validators", 1, 0, "FolderValidator");
     qRegisterMetaType<OperationResult>("operationResult");
+    qRegisterMetaType<Song>("song");
     qmlRegisterType<FileValidator>("SongImporter.Validators", 1, 0, "FileValidator");
+    qmlRegisterType<FileReceiver>("SongImporter.FileReceiver", 1, 0, "FileReceiver");
     qmlRegisterSingletonType<FileUtils>("SongImporter.Utils", 1, 0, "FileUtils",
                                         [&app](QQmlEngine *, QJSEngine *) -> QObject* {
                                             return new FileUtils(&app);
