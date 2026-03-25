@@ -31,7 +31,7 @@ class SONGIMPORTERLIB_EXPORT FileReceiver : public QObject
 public:
     FileReceiver();
 public slots:
-    [[nodiscard]] Song getSongFromFile(const QUrl& file);
+    [[nodiscard]] OperationResult getSongFromFile(const QUrl& file,Song& song);
 
 private:
     [[nodiscard]] OperationResult getSongFromMP3 (TagLib::File* file,Song& song);
