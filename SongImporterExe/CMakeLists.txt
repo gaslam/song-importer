@@ -30,6 +30,7 @@ qt_add_qml_module(appSongImporterExe
         QML_FILES ExportFormPage.qml
         RESOURCES Resources/resources.qrc
         QML_FILES ImporterDropArea.qml
+        QML_FILES SongTable.qml
         QML_FILES ContactModel.qml
 )
 
