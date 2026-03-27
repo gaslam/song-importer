@@ -3,6 +3,7 @@
 
 #include "OperationResult.h"
 #include "SongImporterLib_global.h"
+#include "AlbumCoverProvider.h"
 #include <QObject>
 #include <QUrl>
 #include <taglib/taglib.h>
@@ -32,13 +33,15 @@ class SONGIMPORTERLIB_EXPORT FileReceiver : public QObject
 {
     Q_OBJECT
 public:
-    FileReceiver();
+    FileReceiver(AlbumCoverProvider* m_Manager, QObject* parent = nullptr);
 public slots:
     [[nodiscard]] OperationResult getSongFromFile(const QUrl& file,Song& song);
 
 private:
     [[nodiscard]] OperationResult getSongFromMP3 (TagLib::File* file,Song& song);
     void extractTagFromSong(TagLib::Tag* tag,const TagLib::FileName& filename,Song& song);
+
+    AlbumCoverProvider* m_Manager;
 };
 
 #endif // FILERECEIVER_H

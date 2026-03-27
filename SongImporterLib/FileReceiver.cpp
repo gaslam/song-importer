@@ -8,7 +8,10 @@
 #include <ID3v2Tag.h>
 
 
-FileReceiver::FileReceiver() {}
+FileReceiver::FileReceiver(AlbumCoverProvider *pManager, QObject *parent) : QObject{parent}, m_Manager{pManager}
+{
+
+}
 
 OperationResult FileReceiver::getSongFromFile(const QUrl &file,Song& song)
 {
@@ -95,7 +98,7 @@ void FileReceiver::extractTagFromSong(TagLib::Tag *tag, const TagLib::FileName &
     song.fileName = filename.toString().toCString();
     song.title = tag->title().toCString();
     song.year = tag->year();
-    song.albumCover = QUrl{"qrc:/icons/logo-icon.png"};
+    song.albumCover = QUrl{"image://albumcover/test"};
 }
 
 
