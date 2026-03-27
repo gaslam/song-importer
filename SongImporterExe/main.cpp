@@ -7,6 +7,7 @@
 #include <FileUtils.h>
 #include <FileReceiver.h>
 #include <SongList.h>
+#include <AlbumCoverProvider.h>
 
 int main(int argc, char *argv[])
 {
@@ -14,13 +15,16 @@ int main(int argc, char *argv[])
     qmlRegisterType<FolderValidator>("SongImporter.Validators", 1, 0, "FolderValidator");
     qRegisterMetaType<Song>("song");
     qmlRegisterType<FileValidator>("SongImporter.Validators", 1, 0, "FileValidator");
-    qmlRegisterType<FileReceiver>("SongImporter.FileReceiver", 1, 0, "FileReceiver");
     qmlRegisterSingletonType<FileUtils>("SongImporter.Utils", 1, 0, "FileUtils",
                                         [&app](QQmlEngine *, QJSEngine *) -> QObject* {
                                             return new FileUtils(&app);
-                                        });
+    });
 
-      SongList* model{new SongList{&app}};
+    QString defaultString{"default"};
+    QImage defaultImage{":/icons/logo-icon.png"};
+
+        AlbumCoverProvider* provider = new AlbumCoverProvider(defaultString,defaultImage);
+    SongList* model{new SongList{new FileReceiver{provider,&app},&app}};
     qmlRegisterSingletonInstance("SongImporter.SongListModel",1,0,"SongListModel",model);
     QQmlApplicationEngine engine;
     QObject::connect(
