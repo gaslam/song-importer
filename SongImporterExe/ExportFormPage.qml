@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import SongImporter.Utils
-import SongImporter.FileReceiver
 import QtQuick.Dialogs
 import SongImporter.SongListModel
 
