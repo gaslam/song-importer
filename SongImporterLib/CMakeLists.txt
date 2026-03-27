@@ -21,6 +21,8 @@ add_library(SongImporterLib SHARED
   OperationResult.h
   FileReceiver.h FileReceiver.cpp
   SongList.h SongList.cpp
+  AlbumCoverProvider.h AlbumCoverProvider.cpp
+
 )
 
 target_compile_definitions(SongImporterLib PRIVATE SONGIMPORTERLIB_LIBRARY)
