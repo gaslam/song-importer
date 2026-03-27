@@ -1,9 +1,15 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import SongImporter.SongListModel
 
 Rectangle {
-
+    color:"gray"
+    Text{
+        id:fileDropText
+        anchors.centerIn: parent
+        text: "Place your audio files here."
+    }
     Component {
         id: contactDelegate
         Item {
@@ -74,6 +80,7 @@ Rectangle {
     function addSongsFromFileToList(file)
     {
         SongListModel.extractSongsFromFile(file)
+        fileDropText.visible = false
     }
 
     ListView {
