@@ -9,7 +9,7 @@ class SONGIMPORTERLIB_EXPORT SongList : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit SongList(QObject *parent = nullptr);
+    explicit SongList(FileReceiver* receiver,QObject *parent = nullptr);
 
     enum ContactRoles {
         TitleRole = Qt::UserRole + 1,
@@ -34,7 +34,7 @@ signals:
 private:
     void addSong(const Song& song);
     QList<Song> m_Songs;
-    FileReceiver m_Receiver;
+    FileReceiver* m_Receiver;
 };
 
 #endif // SONGLIST_H

@@ -1,7 +1,7 @@
 #include "SongList.h"
 
-SongList::SongList(QObject *parent)
-    : QAbstractListModel{parent}
+SongList::SongList(FileReceiver* receiver,QObject *parent)
+    : QAbstractListModel{parent}, m_Receiver{receiver}
 {}
 
 int SongList::columnCount(const QModelIndex &) const
@@ -57,7 +57,7 @@ QHash<int, QByteArray> SongList::roleNames() const
 void SongList::extractSongsFromFile(const QUrl &file)
 {
     Song song;
-    OperationResult result{m_Receiver.getSongFromFile(file,song)};
+    OperationResult result{m_Receiver->getSongFromFile(file,song)};
 
     if(!result.isSuccessful)
     {

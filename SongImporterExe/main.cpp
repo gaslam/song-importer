@@ -33,6 +33,8 @@ int main(int argc, char *argv[])
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
+    engine.addImageProvider("albumcover", provider);
+
     engine.loadFromModule("SongImporterExe", "Main");
 
     return app.exec();
