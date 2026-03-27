@@ -31,7 +31,7 @@ qt_add_qml_module(appSongImporterExe
         RESOURCES Resources/resources.qrc
         QML_FILES ImporterDropArea.qml
         QML_FILES SongTable.qml
-        QML_FILES ContactModel.qml
+        QML_FILES
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
