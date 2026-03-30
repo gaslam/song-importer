@@ -32,6 +32,7 @@ public slots:
 signals:
     void errorReceived(const QString& error);
 private:
+    void addSongs(const QList<Song> &song);
     void addSong(const Song& song);
     QList<Song> m_Songs;
     FileReceiver* m_Receiver;

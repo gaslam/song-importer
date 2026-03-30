@@ -43,6 +43,16 @@ void SongList::addSong(const Song &song)
     endInsertRows();
 }
 
+void SongList::addSongs(const QList<Song> &songs)
+{
+    int start = m_Songs.size();
+    int end = start + songs.size() - 1;
+    beginInsertRows(QModelIndex(), start, end);
+    m_Songs << songs;
+    endInsertRows();
+}
+
+
 QHash<int, QByteArray> SongList::roleNames() const
 {
     return {
@@ -56,8 +66,8 @@ QHash<int, QByteArray> SongList::roleNames() const
 
 void SongList::extractSongsFromFile(const QUrl &file)
 {
-    Song song;
-    OperationResult result{m_Receiver->getSongFromFile(file,song)};
+    QList<Song> songs;
+    OperationResult result{m_Receiver->getSongFromFile(file,songs)};
 
     if(!result.isSuccessful)
     {
@@ -65,5 +75,5 @@ void SongList::extractSongsFromFile(const QUrl &file)
         return;
     }
 
-    addSong(song);
+    addSongs(songs);
 }
