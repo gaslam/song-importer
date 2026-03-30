@@ -12,6 +12,7 @@ public:
 
 public:
     void addImage(const QString &id, const QImage& image);
+    [[nodiscard]] bool hasImage(const QString& id) const;
 
 private:
     const QString m_DefaultId;

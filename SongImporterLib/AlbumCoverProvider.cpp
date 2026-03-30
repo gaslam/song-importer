@@ -15,6 +15,11 @@ void AlbumCoverProvider::addImage(const QString &id, const QImage &image)
     }
 }
 
+bool AlbumCoverProvider::hasImage(const QString &id) const
+{
+    return m_Images.contains(id);
+}
+
 QImage AlbumCoverProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
     QImage image;
