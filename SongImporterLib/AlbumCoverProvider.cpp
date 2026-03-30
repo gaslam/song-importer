@@ -33,14 +33,16 @@ QImage AlbumCoverProvider::requestImage(const QString &id, QSize *size, const QS
         image = m_Images[m_DefaultId];
     }
 
-    if(!image.isNull())
+    if(image.isNull())
     {
-        if (size)
-            *size = image.size();
-
-        if (requestedSize.width() > 0 && requestedSize.height() > 0)
-            image = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        return image;
     }
+    if (size)
+        *size = image.size();
 
+    if (!requestedSize.isValid())
+        return image;
+
+    image = image.scaled(requestedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     return image;
 }

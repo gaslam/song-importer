@@ -33,6 +33,7 @@ Rectangle {
                     Layout.fillWidth: true
 
                     fillMode: Image.PreserveAspectFit
+                    smooth: true
 
                 }
 
