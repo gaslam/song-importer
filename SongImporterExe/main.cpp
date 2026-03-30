@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     QImage defaultImage{":/icons/logo-icon.png"};
 
         AlbumCoverProvider* provider = new AlbumCoverProvider(defaultString,defaultImage);
-    SongList* model{new SongList{new FileReceiver{provider,&app},&app}};
+    SongList* model{new SongList{new FileReceiver{provider,"image://albumcover",&app},&app}};
     qmlRegisterSingletonInstance("SongImporter.SongListModel",1,0,"SongListModel",model);
     QQmlApplicationEngine engine;
     QObject::connect(
