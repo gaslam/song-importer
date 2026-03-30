@@ -6,8 +6,10 @@
 #include "AlbumCoverProvider.h"
 #include <QObject>
 #include <QUrl>
+#include <qfileinfo.h>
 #include <taglib/taglib.h>
 #include <taglib/fileref.h>
+#include <taglib/id3v2tag.h>
 
 struct SONGIMPORTERLIB_EXPORT Song {
 
@@ -33,15 +35,22 @@ class SONGIMPORTERLIB_EXPORT FileReceiver : public QObject
 {
     Q_OBJECT
 public:
-    FileReceiver(AlbumCoverProvider* m_Manager, QObject* parent = nullptr);
+    FileReceiver(AlbumCoverProvider* m_Manager, const QString& baseUrl, QObject* parent = nullptr);
 public slots:
-    [[nodiscard]] OperationResult getSongFromFile(const QUrl& file,Song& song);
+    [[nodiscard]] OperationResult getSongFromFile(const QUrl& file,QList<Song>& songs) const;
+    [[nodiscard]] OperationResult getSongsFromZip(const QString &filePath, QList<Song> &songs) const;
 
 private:
-    [[nodiscard]] OperationResult getSongFromMP3 (TagLib::File* file,Song& song);
-    void extractTagFromSong(TagLib::Tag* tag,const TagLib::FileName& filename,Song& song);
+    [[nodiscard]] OperationResult getSongFromMP3 (const TagLib::FileRef& file,Song& song) const;
+    [[nodiscard]] QString getAlbumCover(TagLib::ID3v2::Tag* tag,const QString& id) const;
+    void extractTagFromSong(TagLib::ID3v2::Tag* tag,const TagLib::FileName& filename,Song& song) const;
+    void extractTagFromSong(TagLib::Tag* tag,const TagLib::FileName& filename,Song& song) const;
+    void extractTagTextData(TagLib::Tag* tag, const TagLib::FileName &filename,Song& song) const;
+
+    const QString m_BaseUrl;
 
     AlbumCoverProvider* m_Manager;
+    /*OperationResult extractPictureFromTag(TagLib::ID3v2::Tag *tag, const QString &albumCover);*/
 };
 
 #endif // FILERECEIVER_H
