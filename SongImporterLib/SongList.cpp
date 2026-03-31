@@ -39,20 +39,57 @@ QVariant SongList::data(const QModelIndex &index, int role) const
     }
 }
 
-void SongList::addSong(const Song &song)
+OperationResult SongList::addSong(const Song &song)
 {
+    if(isSongAlreadyInList(song))
+    {
+        const QString error{QString{"Cannot add song %1 by %2 cause it's already in the list"}.arg(song.title,song.artists)};
+        return OperationResult::fail(error);
+    }
     beginInsertRows(QModelIndex(), m_Songs.size(), m_Songs.size());
     m_Songs << song;
     endInsertRows();
+    return OperationResult::succeed();
 }
 
-void SongList::addSongs(const QList<Song> &songs)
+bool SongList::isSongAlreadyInList(const Song &song) const
 {
-    int start = m_Songs.size();
-    int end = start + songs.size() - 1;
-    beginInsertRows(QModelIndex(), start, end);
-    m_Songs << songs;
-    endInsertRows();
+    return m_Songs.contains(song);
+}
+
+OperationResult SongList::addSongs(const QList<Song> &songs)
+{
+
+    QList<Song> newSongs;
+    QList<QString> errors;
+    foreach(const Song& song, songs){
+        if(isSongAlreadyInList(song) || newSongs.contains(song))
+        {
+            QString error{QString{"Cannot add song: %1 by %2. Song is already in list."}.arg(song.title,song.artists)};
+            errors << error;
+        }
+        else
+        {
+            newSongs << song;
+        }
+    };
+
+    if(!newSongs.isEmpty())
+    {
+        int start = m_Songs.size();
+        int end = start + newSongs.size() - 1;
+        beginInsertRows(QModelIndex(), start, end);
+        m_Songs << newSongs;
+        endInsertRows();
+    }
+
+    if(!errors.isEmpty())
+    {
+        const QString error{QString{"The following errors have been occurred: %1"}.arg(errors.join("\n"))};
+        return OperationResult::fail(error);
+    }
+
+    return OperationResult::succeed();
 }
 
 
@@ -101,5 +138,10 @@ void SongList::extractSongsFromFiles(const QList<QUrl> &files)
         }
     }
 
-    addSongs(songs);
+    OperationResult songAddingResult{addSongs(songs)};
+
+    if(!songAddingResult.isSuccessful)
+    {
+        emit errorReceived(songAddingResult.error);
+    }
 }
