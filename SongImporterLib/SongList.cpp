@@ -1,4 +1,7 @@
 #include "SongList.h"
+#include "FileUtils.h"
+#include <algorithm>
+
 
 SongList::SongList(FileReceiver* receiver,QObject *parent)
     : QAbstractListModel{parent}, m_Receiver{receiver}
@@ -64,15 +67,38 @@ QHash<int, QByteArray> SongList::roleNames() const
     };
 }
 
-void SongList::extractSongsFromFile(const QUrl &file)
+void SongList::extractSongsFromFiles(const QList<QUrl> &files)
 {
     QList<Song> songs;
-    OperationResult result{m_Receiver->getSongFromFile(file,songs)};
 
-    if(!result.isSuccessful)
+    foreach(const auto& file, files)
     {
-        emit errorReceived(result.error);
-        return;
+        QString path{file.path()};
+#ifdef Q_OS_WIN
+        if (path.startsWith("/") && path[2] == ':') // e.g., "/C:/..."
+            path = path.mid(1); // remove first slash
+#endif
+
+        OperationResult result {};
+        const QFileInfo info{path};
+
+        if(info.suffix().compare("zip", Qt::CaseInsensitive) == 0)
+        {
+            result = FileUtils::isZipFile(file);
+
+            if(!result.isSuccessful) break;
+
+            result = m_Receiver->getSongsFromZip(path,songs);
+        }
+        else
+        {
+            result = m_Receiver->getSongFromFile(path,songs);
+        }
+
+        if(!result.isSuccessful)
+        {
+            emit errorReceived(result.error);
+        }
     }
 
     addSongs(songs);

@@ -78,9 +78,9 @@ Rectangle {
         }
     }
 
-    function addSongsFromFileToList(file)
+    function addSongsFromFileToList(files)
     {
-        SongListModel.extractSongsFromFile(file)
+        SongListModel.extractSongsFromFiles(files)
         fileDropText.visible = false
     }
 

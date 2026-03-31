@@ -27,6 +27,17 @@ public:
     QUrl albumCover;
     QString artists;
     QString fileName;
+
+    bool operator==(const Song& other) const
+    {
+        const bool bIsSameYear{this->year == other.year};
+        const bool bIsSameTitle{this->title.compare(other.title,Qt::CaseInsensitive) == 0};
+        const bool bIsSameAlbum{this->album.compare(other.album,Qt::CaseInsensitive) == 0};
+        const bool bAreSameArtists{this->artists.compare(other.artists,Qt::CaseInsensitive) == 0};
+        const bool bIsSameAlbumCover{this->albumCover == other.albumCover};
+
+        return bIsSameYear && bIsSameTitle && bIsSameAlbum && bAreSameArtists && bIsSameAlbumCover;
+    }
 };
 
 Q_DECLARE_METATYPE(Song)
@@ -36,12 +47,12 @@ class SONGIMPORTERLIB_EXPORT FileReceiver : public QObject
     Q_OBJECT
 public:
     FileReceiver(AlbumCoverProvider* m_Manager, const QString& baseUrl, QObject* parent = nullptr);
-public slots:
-    [[nodiscard]] OperationResult getSongFromFile(const QUrl& file,QList<Song>& songs) const;
+    [[nodiscard]] OperationResult getSongFromFile(const QString& filePath,QList<Song>& songs) const;
     [[nodiscard]] OperationResult getSongsFromZip(const QString &filePath, QList<Song> &songs) const;
+public slots:
 
 private:
-    [[nodiscard]] OperationResult getSongFromMP3 (const TagLib::FileRef& file,Song& song) const;
+    [[nodiscard]] OperationResult getSongFromFileRef (const TagLib::FileRef& file,Song& song) const;
     [[nodiscard]] QString getAlbumCover(TagLib::ID3v2::Tag* tag,const QString& id) const;
     void extractTagFromSong(TagLib::ID3v2::Tag* tag,const TagLib::FileName& filename,Song& song) const;
     void extractTagFromSong(TagLib::Tag* tag,const TagLib::FileName& filename,Song& song) const;

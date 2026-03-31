@@ -19,28 +19,23 @@ FileReceiver::FileReceiver(AlbumCoverProvider *pManager,const QString& baseUrl, 
 
 }
 
-OperationResult FileReceiver::getSongFromFile(const QUrl &file, QList<Song> &songs) const
+OperationResult FileReceiver::getSongFromFile(const QString &filePath, QList<Song> &songs) const
 {
-    QString path{file.path()};
-#ifdef Q_OS_WIN
-    if (path.startsWith("/") && path[2] == ':') // e.g., "/C:/..."
-        path = path.mid(1); // remove first slash
-#endif
+    TagLib::FileRef file{filePath.toStdString().c_str()};
 
-
-    const QFileInfo info{path};
-    if(info.suffix().compare("zip", Qt::CaseInsensitive) == 0)
+    if(file.isNull())
     {
-        const OperationResult result {FileUtils::isZipFile(file)};
-
-        if(!result.isSuccessful) return result;
-
-        return getSongsFromZip(path,songs);
+        return OperationResult::fail(QString{"Cannot read file: %1"}.arg(filePath));
     }
-    //TODO: Implement single file
 
-    return OperationResult::succeed();
+    Song song;
+    auto result{ getSongFromFileRef(file,song)};
+
+    songs << song;
+    return result;
 }
+
+
 
 OperationResult FileReceiver::getSongsFromZip(const QString &filePath, QList<Song> &songs) const
 {
@@ -73,7 +68,7 @@ OperationResult FileReceiver::getSongsFromZip(const QString &filePath, QList<Son
             TagLib::ByteVectorStream memStream(bv);
             TagLib::FileRef file{&memStream};
             Song song;
-            const auto result{getSongFromMP3(file,song)};
+            const auto result{getSongFromFileRef(file,song)};
 
             if(!result.isSuccessful)
             {
@@ -83,7 +78,7 @@ OperationResult FileReceiver::getSongsFromZip(const QString &filePath, QList<Son
             songs << song;
 
         }catch (std::exception& e){
-            errors << e.what();
+            errors << QString{"%1 for file: %2"}.arg(e.what(),filePath);
         }
         zipFile.close();
     }
@@ -96,7 +91,7 @@ OperationResult FileReceiver::getSongsFromZip(const QString &filePath, QList<Son
      return OperationResult::succeed();
 }
 
-OperationResult FileReceiver::getSongFromMP3(const TagLib::FileRef& fileRef,Song& song) const
+OperationResult FileReceiver::getSongFromFileRef(const TagLib::FileRef& fileRef,Song& song) const
 {
     TagLib::File* file{fileRef.file()};
     if(TagLib::MPEG::File* mpegfile{dynamic_cast<TagLib::MPEG::File*>(file)})

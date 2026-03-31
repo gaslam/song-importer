@@ -36,12 +36,9 @@ Page {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 ImporterDropArea{
-                onDropped: function(drop) {
-                    for(const fileurl of drop.urls)
-                    {
-                       songTable.addSongsFromFileToList(fileurl)
+                    onDropped: function(drop) {
+                        songTable.addSongsFromFileToList(drop.urls)
                     }
-                }
                 }
             }
 
