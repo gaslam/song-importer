@@ -39,25 +39,23 @@ OperationResult FileReceiver::getSongFromFile(const QUrl &file, QList<Song> &son
     }
     //TODO: Implement single file
 
-    return OperationResult{};
+    return OperationResult::succeed();
 }
 
 OperationResult FileReceiver::getSongsFromZip(const QString &filePath, QList<Song> &songs) const
 {
-    OperationResult result;
     QuaZip zip(filePath);
 
     if (!zip.open(QuaZip::mdUnzip)) {
-        result.isSuccessful = false;
-        result.error = "Cannot open ZIP archive: " + filePath;
-        return result;
+
+        const QString error{ "Cannot open ZIP archive: " + filePath};
+        return OperationResult::fail(error);
     }
 
     QuaZipFile zipFile(&zip);
     QuaZipFileInfo fileInfo;
 
     QList<QString> errors{};
-    bool bSucceeded{true};
 
     for(bool i{zip.goToFirstFile()}; i; i = zip.goToNextFile())
     {
@@ -79,31 +77,27 @@ OperationResult FileReceiver::getSongsFromZip(const QString &filePath, QList<Son
 
             if(!result.isSuccessful)
             {
-                bSucceeded = false;
                 errors << result.error;
                 continue;
             }
             songs << song;
 
         }catch (std::exception& e){
-            bSucceeded = false;
             errors << e.what();
         }
         zipFile.close();
     }
 
-    result.isSuccessful = bSucceeded;
-
     if(!errors.empty())
     {
-        result.error = QString("The following errors occured: %1").arg(errors.join("\n"));
+        const QString error {QString("The following errors occured: %1").arg(errors.join("\n"))};
+        return OperationResult::fail(error);
     }
-     return result;
+     return OperationResult::succeed();
 }
 
 OperationResult FileReceiver::getSongFromMP3(const TagLib::FileRef& fileRef,Song& song) const
 {
-    OperationResult result{};
     TagLib::File* file{fileRef.file()};
     if(TagLib::MPEG::File* mpegfile{dynamic_cast<TagLib::MPEG::File*>(file)})
     {
@@ -111,32 +105,27 @@ OperationResult FileReceiver::getSongFromMP3(const TagLib::FileRef& fileRef,Song
         if(mpegfile->hasID3v2Tag())
         {
             extractTagFromSong(mpegfile->ID3v2Tag(),file->name(),song);
-            result.isSuccessful = true;
-            return result;
+            return OperationResult::succeed();
         }
 
         if(mpegfile->hasID3v1Tag())
         {
             extractTagFromSong(mpegfile->ID3v1Tag(),file->name(),song);
-            result.isSuccessful = true;
-            return result;
+            return OperationResult::succeed();
         }
 
         if(mpegfile->hasAPETag())
         {
             extractTagFromSong(mpegfile->APETag(),file->name(),song);
-            result.isSuccessful = true;
-            return result;
+            return OperationResult::succeed();
         }
 
-        result.isSuccessful = false;
-        result.error = "Cannot read any tags from file. Add a valid mp3 file.";
-        return result;
+        const QString error{ "Cannot read any tags from file. Add a valid mp3 file."};
+        return OperationResult::fail(error);
     }
 
-    result.isSuccessful = false;
-    result.error = "Cannot read any tags from file. Add a valid mp3 file.";
-    return result;
+    const QString error{  "Cannot read any tags from file. Add a valid audio file."};
+    return OperationResult::fail(error);
 }
 
 void FileReceiver::extractTagFromSong(TagLib::Tag *tag, const TagLib::FileName &filename,Song& song) const

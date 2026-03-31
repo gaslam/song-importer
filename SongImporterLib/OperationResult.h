@@ -15,6 +15,15 @@ public:
 
     QString error{};
     bool isSuccessful{false};
+
+    static inline OperationResult succeed(){
+        constexpr bool bIsSuccesful{true};
+        return OperationResult{"",bIsSuccesful};
+    }
+
+    static inline OperationResult fail(const QString& error){
+        return OperationResult{error};
+    }
 };
 Q_DECLARE_METATYPE(OperationResult)
 
