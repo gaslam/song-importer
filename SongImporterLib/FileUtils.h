@@ -44,7 +44,7 @@ public slots:
         {
 
         case Rekordbox:
-            installDir = installDir.filePath("rekordbox/rekordbox/rekordbox.xml");
+            installDir = installDir.filePath("../rekordbox/rekordbox/rekordbox.xml");
             break;
         }
 
