@@ -22,6 +22,7 @@ add_library(SongImporterLib SHARED
   FileReceiver.h FileReceiver.cpp
   SongList.h SongList.cpp
   AlbumCoverProvider.h AlbumCoverProvider.cpp
+  SongManager.h SongManager.cpp
 
 )
 
