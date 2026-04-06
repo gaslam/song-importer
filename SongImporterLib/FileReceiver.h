@@ -10,6 +10,7 @@
 #include <taglib/taglib.h>
 #include <taglib/fileref.h>
 #include <taglib/id3v2tag.h>
+#include <flacfile.h>
 
 struct SONGIMPORTERLIB_EXPORT Song {
 

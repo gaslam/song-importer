@@ -123,6 +123,47 @@ OperationResult FileReceiver::getSongFromFileRef(const TagLib::FileRef& fileRef,
     return OperationResult::fail(error);
 }
 
+OperationResult FileReceiver::getSongFromFlacFile(TagLib::FLAC::File *file, Song &song) const
+{
+    TagLib::Ogg::XiphComment* tag = file->xiphComment(false);
+    extractTagTextData(tag,file->name(),song);
+    QString albumId{""};
+    if (tag) {
+        auto test = tag->fieldListMap();
+
+        TagLib::StringList albumArtists {test["ISRC"]};
+
+        if (albumArtists.isEmpty()) {
+            albumArtists = test["ALBUMARTIST"];
+            if (albumArtists.isEmpty()) {
+                auto artist{tag->artist()};
+                if(artist.isEmpty()) artist = "Unknown Artist";
+                albumArtists.append(artist);
+            }
+             const QString& albumCoverId{QString{"%1-%2"}.arg(albumArtists.front().toCString(),song.album)};
+        }
+
+        albumId = QString::fromStdString(albumArtists.front().to8Bit(true));
+    }
+
+    QString albumCover{getAlbumCover(file,albumId)};
+
+    if(!albumCover.isEmpty())
+    {
+        song.albumCover = albumCover;
+        return OperationResult::succeed();
+    }
+
+    if(file->hasID3v2Tag())
+    {
+        song.albumCover = getAlbumCover(file->ID3v2Tag(),albumId);
+        return OperationResult::succeed();
+    }
+        song.albumCover = m_DefaultUrl;
+        return OperationResult::succeed();
+
+}
+
 void FileReceiver::extractTagFromSong(TagLib::Tag *tag, const TagLib::FileName &filename,Song& song) const
 {
     extractTagTextData(tag,filename,song);
