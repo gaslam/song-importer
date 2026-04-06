@@ -30,13 +30,14 @@ public:
 
     bool operator==(const Song& other) const
     {
-        const bool bIsSameYear{this->year == other.year};
-        const bool bIsSameTitle{this->title.compare(other.title,Qt::CaseInsensitive) == 0};
-        const bool bIsSameAlbum{this->album.compare(other.album,Qt::CaseInsensitive) == 0};
-        const bool bAreSameArtists{this->artists.compare(other.artists,Qt::CaseInsensitive) == 0};
-        const bool bIsSameAlbumCover{this->albumCover == other.albumCover};
+        const bool bIsSameFile{this->fileName == other.fileName};
 
-        return bIsSameYear && bIsSameTitle && bIsSameAlbum && bAreSameArtists && bIsSameAlbumCover;
+        return bIsSameFile;
+    }
+
+    bool operator==(const QString& fileName) const
+    {
+        return this->fileName == fileName;
     }
 };
 
