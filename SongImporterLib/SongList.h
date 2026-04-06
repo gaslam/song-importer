@@ -36,7 +36,7 @@ private:
     /*OperationResult addSongs(const QList<Song> &song);*/
     OperationResult addSong(const Song& song);
 
-    Manager m_Manager;
+    SongManager m_Manager;
 
     QList<Song> m_Songs{};
 };

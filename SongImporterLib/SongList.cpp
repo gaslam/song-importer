@@ -1,13 +1,11 @@
 #include "SongList.h"
-#include "FileUtils.h"
-#include <algorithm>
 
 
 SongList::SongList(QObject *parent)
     : QAbstractListModel{parent}
 {
 
-    connect(&m_Manager,&Manager::songReceived,this,&SongList::addSong);
+    connect(&m_Manager,&SongManager::songReceived,this,&SongList::addSong);
 }
 
 int SongList::columnCount(const QModelIndex &) const
