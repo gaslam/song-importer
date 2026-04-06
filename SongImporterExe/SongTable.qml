@@ -48,7 +48,7 @@ Rectangle {
                 }
 
                 Text {
-                    text: "<b>Album:</b><br /> " + (!album.length !== 0 ? album : "unknown")
+                    text: "<b>Album:</b><br /> " + (album.length > 0 ? album : "unknown")
                     Layout.fillWidth: true
                     Layout.preferredWidth: 7
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -57,7 +57,7 @@ Rectangle {
                     clip: true
                 }
                 Text {
-                    text: "<b>Artists:</b><br /> " + (!artists.length !== 0 ? artists : "unknown")
+                    text: "<b>Artists:</b><br /> " + (artists.length > 0 ? artists : "unknown")
                     Layout.fillWidth: true
                     Layout.preferredWidth: 7
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
