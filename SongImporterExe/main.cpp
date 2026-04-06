@@ -8,6 +8,7 @@
 #include <FileReceiver.h>
 #include <SongList.h>
 #include <AlbumCoverProvider.h>
+#include <QThread>
 
 int main(int argc, char *argv[])
 {
@@ -23,16 +24,12 @@ int main(int argc, char *argv[])
     QString defaultString{"default"};
     QImage defaultImage{":/icons/logo-icon.png"};
 
-        AlbumCoverProvider* provider = new AlbumCoverProvider(defaultString,defaultImage);
-    SongList* model{new SongList{new FileReceiver{provider,"image://albumcover",&app},&app}};
+    AlbumCoverProvider* provider {AlbumCoverProvider::Instance()};
+
+    provider->setDefaults(defaultString,defaultImage);
+    SongList* model{new SongList{&app}};
     qmlRegisterSingletonInstance("SongImporter.SongListModel",1,0,"SongListModel",model);
     QQmlApplicationEngine engine;
-    QObject::connect(
-        &engine,
-        &QQmlApplicationEngine::objectCreationFailed,
-        &app,
-        []() { QCoreApplication::exit(-1); },
-        Qt::QueuedConnection);
     engine.addImageProvider("albumcover", provider);
 
     engine.loadFromModule("SongImporterExe", "Main");
