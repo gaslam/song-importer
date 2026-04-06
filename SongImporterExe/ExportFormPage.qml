@@ -46,8 +46,7 @@ Page {
                 target: SongListModel
 
                 function onErrorReceived(error) {
-                    errorDialog.informativeText = error
-                    errorDialog.open();
+                    errorDialog.addError(error);
                 }
             }
 
@@ -56,6 +55,31 @@ Page {
         MessageDialog{
             id:errorDialog
             text: "A error has occured"
+            property var errors: []
+
+            function addError(error)
+            {
+                errors.push(error);
+                if(!errorDialog.visible)
+                {
+                    openDialogIfErrorsNotEmpty();
+                }
+            }
+
+            function openDialogIfErrorsNotEmpty()
+            {
+                if(errors.length > 0)
+                {
+                    let currError= errors[0];
+                    errorDialog.informativeText = currError;
+                    errorDialog.open();
+                    errors.pop();
+                }
+            }
+
+            onAccepted: {
+                openDialogIfErrorsNotEmpty();
+            }
 
         }
 

@@ -47,6 +47,7 @@ OperationResult SongList::addSong(const Song &song)
     if(m_Songs.contains(song))
     {
         const QString error{QString{"Cannot add song: %1 by %2. Song is already in list."}.arg(song.title,song.artists)};
+        emit errorReceived(error);
         return OperationResult::fail(error);
     }
     beginInsertRows(QModelIndex(), m_Songs.size(),m_Songs.size());
