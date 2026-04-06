@@ -6,6 +6,7 @@ SongList::SongList(QObject *parent)
 {
 
     connect(&m_Manager,&SongManager::songReceived,this,&SongList::addSong);
+    connect(&m_Manager,&SongManager::errorReceived,this,&SongList::errorReceived);
 }
 
 int SongList::columnCount(const QModelIndex &) const
@@ -117,10 +118,7 @@ void SongList::extractSongsFromFiles(const QList<QUrl> &files)
         OperationResult result {};
         const QFileInfo info{path};
 
-        if(info.suffix().compare("mp3",Qt::CaseInsensitive) == 0)
-        {
             m_Manager.addSong(path);
-        }
 
         /*if(info.suffix().compare("zip", Qt::CaseInsensitive) == 0)
         {

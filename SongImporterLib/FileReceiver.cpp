@@ -30,11 +30,17 @@ void FileReceiver::getSongFromFile()
 
     if(file.isNull())
     {
-        //return OperationResult::fail(QString{"Cannot read file: %1"}.arg(m_FileToProcess));
+        emit errorReceived(QString{"Cannot read file: %1."}.arg(m_FileToProcess));
+        return;
     }
 
     Song song;
     auto result{ getSongFromFileRef(file,song)};
+
+    if(!result.isSuccessful)
+    {
+        emit errorReceived(result.error);
+    }
 
     emit songProcessed(song);
 }

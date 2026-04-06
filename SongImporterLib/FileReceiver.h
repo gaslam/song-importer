@@ -54,6 +54,7 @@ public slots:
     void getSongFromFile();
 signals:
     void songProcessed(const Song& song);
+    void errorReceived(const QString& error);
 
 private:
     [[nodiscard]] OperationResult getSongFromFileRef (const TagLib::FileRef& file,Song& song) const;

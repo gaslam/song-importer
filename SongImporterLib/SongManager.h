@@ -20,6 +20,7 @@ signals:
     void start();
     void stop();
     void songReceived(const Song& song);
+    void errorReceived(const QString& error);
 
 public slots:
     void quit();
