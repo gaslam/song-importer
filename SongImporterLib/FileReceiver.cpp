@@ -15,7 +15,8 @@
 #include <taglib/tbytevectorstream.h>
 
 
-FileReceiver::FileReceiver(const QString& file,const QString& baseUrl, QObject *parent) : QObject{parent},
+FileReceiver::FileReceiver(const QString& file,const QString& baseUrl,bool canExtractAlbumCovers, QObject *parent) : QObject{parent},
+    m_CanExtractAlbumCovers{canExtractAlbumCovers},
     m_Manager{AlbumCoverProvider::Instance()},
     m_FileToProcess{file},
     m_BaseUrl{baseUrl},
@@ -162,12 +163,15 @@ OperationResult FileReceiver::getSongFromFlacFile(TagLib::FLAC::File *file, Song
         albumId = QString::fromStdString(albumArtists.front().to8Bit(true));
     }
 
-    QString albumCover{getAlbumCover(file,albumId)};
-
-    if(!albumCover.isEmpty())
+    if(m_CanExtractAlbumCovers)
     {
-        song.albumCover = albumCover;
-        return OperationResult::succeed();
+        QString albumCover{getAlbumCover(file,albumId)};
+
+        if(!albumCover.isEmpty())
+        {
+            song.albumCover = albumCover;
+            return OperationResult::succeed();
+        }
     }
 
     if(file->hasID3v2Tag())
@@ -212,7 +216,15 @@ void FileReceiver::extractTagFromSong(TagLib::ID3v2::Tag *tag, const TagLib::Fil
     }
 
     const QString& albumCoverId{QString{"%1-%2"}.arg(albumArtist,song.album)};
-    song.albumCover = getAlbumCover(tag, albumCoverId);
+
+    if(m_CanExtractAlbumCovers)
+    {
+        song.albumCover = getAlbumCover(tag, albumCoverId);
+    }
+    else
+    {
+        song.albumCover = m_DefaultUrl;
+    }
 }
 
 void FileReceiver::extractTagTextData(TagLib::Tag *tag, const TagLib::FileName &filename, Song &song) const

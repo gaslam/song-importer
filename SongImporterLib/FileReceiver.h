@@ -48,7 +48,7 @@ class SONGIMPORTERLIB_EXPORT FileReceiver : public QObject
 {
     Q_OBJECT
 public:
-    FileReceiver(const QString& file,const QString& baseUrl , QObject* parent = nullptr);
+    FileReceiver(const QString& file,const QString& baseUrl ,bool canExtractAlbumCovers = false, QObject* parent = nullptr);
     //[[nodiscard]] OperationResult getSongsFromZip(const QString &filePath, QList<Song> &songs) const;
 public slots:
     void getSongFromFile();
@@ -64,6 +64,8 @@ private:
     void extractTagFromSong(TagLib::ID3v2::Tag* tag,const TagLib::FileName& filename,Song& song) const;
     void extractTagFromSong(TagLib::Tag* tag,const TagLib::FileName& filename,Song& song) const;
     void extractTagTextData(TagLib::Tag* tag, const TagLib::FileName &filename,Song& song) const;
+
+    const bool m_CanExtractAlbumCovers;
 
     const QString m_BaseUrl;
     const QString m_DefaultUrl;

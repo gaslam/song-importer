@@ -38,7 +38,8 @@ void SongManager::quit()
 
 void SongManager::createWorker(SongManager *manager,const QString& file)
 {
-    QSharedPointer<FileReceiver> provider{ new FileReceiver{file,"image://albumcover"}};
+    constexpr bool canExtractAlbumCovers{true};
+    QSharedPointer<FileReceiver> provider{ new FileReceiver{file,"image://albumcover",canExtractAlbumCovers}};
     FileReceiver* receiver{provider.get()};
     connect(receiver,&FileReceiver::songProcessed,manager,&SongManager::songProcessed);
     connect(receiver,&FileReceiver::errorReceived,manager,&SongManager::errorReceived);
