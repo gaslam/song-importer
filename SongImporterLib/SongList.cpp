@@ -3,9 +3,12 @@
 #include <algorithm>
 
 
-SongList::SongList(FileReceiver* receiver,QObject *parent)
-    : QAbstractListModel{parent}, m_Receiver{receiver}
-{}
+SongList::SongList(QObject *parent)
+    : QAbstractListModel{parent}
+{
+
+    connect(&m_Manager,&Manager::songReceived,this,&SongList::addSong);
+}
 
 int SongList::columnCount(const QModelIndex &) const
 {
@@ -41,29 +44,25 @@ QVariant SongList::data(const QModelIndex &index, int role) const
 
 OperationResult SongList::addSong(const Song &song)
 {
-    if(isSongAlreadyInList(song))
+    if(m_Songs.contains(song))
     {
-        const QString error{QString{"Cannot add song %1 by %2 cause it's already in the list"}.arg(song.title,song.artists)};
+        const QString error{QString{"Cannot add song: %1 by %2. Song is already in list."}.arg(song.title,song.artists)};
         return OperationResult::fail(error);
     }
-    beginInsertRows(QModelIndex(), m_Songs.size(), m_Songs.size());
+    beginInsertRows(QModelIndex(), m_Songs.size(),m_Songs.size());
     m_Songs << song;
+
     endInsertRows();
     return OperationResult::succeed();
 }
 
-bool SongList::isSongAlreadyInList(const Song &song) const
-{
-    return m_Songs.contains(song);
-}
-
-OperationResult SongList::addSongs(const QList<Song> &songs)
+/*OperationResult SongList::addSongs(const QList<Song> &songs)
 {
 
     QList<Song> newSongs;
     QList<QString> errors;
     foreach(const Song& song, songs){
-        if(isSongAlreadyInList(song) || newSongs.contains(song))
+        if(newSongs.contains(song))
         {
             QString error{QString{"Cannot add song: %1 by %2. Song is already in list."}.arg(song.title,song.artists)};
             errors << error;
@@ -90,7 +89,7 @@ OperationResult SongList::addSongs(const QList<Song> &songs)
     }
 
     return OperationResult::succeed();
-}
+}*/
 
 
 QHash<int, QByteArray> SongList::roleNames() const
@@ -119,7 +118,12 @@ void SongList::extractSongsFromFiles(const QList<QUrl> &files)
         OperationResult result {};
         const QFileInfo info{path};
 
-        if(info.suffix().compare("zip", Qt::CaseInsensitive) == 0)
+        if(info.suffix().compare("mp3",Qt::CaseInsensitive) == 0)
+        {
+            m_Manager.addSong(path);
+        }
+
+        /*if(info.suffix().compare("zip", Qt::CaseInsensitive) == 0)
         {
             result = FileUtils::isZipFile(file);
 
@@ -135,13 +139,7 @@ void SongList::extractSongsFromFiles(const QList<QUrl> &files)
         if(!result.isSuccessful)
         {
             emit errorReceived(result.error);
-        }
+        }*/
     }
 
-    OperationResult songAddingResult{addSongs(songs)};
-
-    if(!songAddingResult.isSuccessful)
-    {
-        emit errorReceived(songAddingResult.error);
-    }
 }

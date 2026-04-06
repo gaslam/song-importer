@@ -4,12 +4,13 @@
 #include <QAbstractListModel>
 #include "SongImporterLib_global.h"
 #include "FileReceiver.h"
+#include "SongManager.h"
 
 class SONGIMPORTERLIB_EXPORT SongList : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit SongList(FileReceiver* receiver,QObject *parent = nullptr);
+    explicit SongList(QObject *parent = nullptr);
 
     enum ContactRoles {
         TitleRole = Qt::UserRole + 1,
@@ -32,12 +33,12 @@ public slots:
 signals:
     void errorReceived(const QString& error);
 private:
-    OperationResult addSongs(const QList<Song> &song);
+    /*OperationResult addSongs(const QList<Song> &song);*/
     OperationResult addSong(const Song& song);
 
-    [[nodiscard]] bool isSongAlreadyInList(const Song& song) const;
-    QList<Song> m_Songs;
-    FileReceiver* m_Receiver;
+    Manager m_Manager;
+
+    QList<Song> m_Songs{};
 };
 
 #endif // SONGLIST_H
