@@ -48,19 +48,25 @@ class SONGIMPORTERLIB_EXPORT FileReceiver : public QObject
 {
     Q_OBJECT
 public:
-    FileReceiver(AlbumCoverProvider* m_Manager, const QString& baseUrl, QObject* parent = nullptr);
-    [[nodiscard]] OperationResult getSongFromFile(const QString& filePath,QList<Song>& songs) const;
-    [[nodiscard]] OperationResult getSongsFromZip(const QString &filePath, QList<Song> &songs) const;
+    FileReceiver(const QString& file,const QString& baseUrl , QObject* parent = nullptr);
+    //[[nodiscard]] OperationResult getSongsFromZip(const QString &filePath, QList<Song> &songs) const;
 public slots:
+    void getSongFromFile();
+signals:
+    void songProcessed(const Song& song);
 
 private:
     [[nodiscard]] OperationResult getSongFromFileRef (const TagLib::FileRef& file,Song& song) const;
+        [[nodiscard]] OperationResult getSongFromFlacFile (TagLib::FLAC::File* file,Song& song) const;
     [[nodiscard]] QString getAlbumCover(TagLib::ID3v2::Tag* tag,const QString& id) const;
+        [[nodiscard]] QString getAlbumCover(TagLib::FLAC::File* tag,const QString& id) const;
     void extractTagFromSong(TagLib::ID3v2::Tag* tag,const TagLib::FileName& filename,Song& song) const;
     void extractTagFromSong(TagLib::Tag* tag,const TagLib::FileName& filename,Song& song) const;
     void extractTagTextData(TagLib::Tag* tag, const TagLib::FileName &filename,Song& song) const;
 
     const QString m_BaseUrl;
+    const QString m_DefaultUrl;
+    const QString m_FileToProcess;
 
     AlbumCoverProvider* m_Manager;
     /*OperationResult extractPictureFromTag(TagLib::ID3v2::Tag *tag, const QString &albumCover);*/

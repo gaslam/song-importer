@@ -11,33 +11,39 @@
 #include <textidentificationframe.h>
 #include <QuaZip.h>
 #include <QuaZipFile.h>
+#include <XiphComment.h>
 #include <taglib/tbytevectorstream.h>
 
 
-FileReceiver::FileReceiver(AlbumCoverProvider *pManager,const QString& baseUrl, QObject *parent) : QObject{parent}, m_Manager{pManager}, m_BaseUrl{baseUrl}
+FileReceiver::FileReceiver(const QString& file,const QString& baseUrl, QObject *parent) : QObject{parent},
+    m_Manager{AlbumCoverProvider::Instance()},
+    m_FileToProcess{file},
+    m_BaseUrl{baseUrl},
+    m_DefaultUrl{baseUrl + "/default"}
 {
 
 }
 
-OperationResult FileReceiver::getSongFromFile(const QString &filePath, QList<Song> &songs) const
+void FileReceiver::getSongFromFile()
 {
-    TagLib::FileRef file{filePath.toStdString().c_str()};
+    TagLib::FileRef file{m_FileToProcess.toStdString().c_str()};
 
     if(file.isNull())
     {
-        return OperationResult::fail(QString{"Cannot read file: %1"}.arg(filePath));
+        //return OperationResult::fail(QString{"Cannot read file: %1"}.arg(m_FileToProcess));
     }
 
     Song song;
     auto result{ getSongFromFileRef(file,song)};
 
-    songs << song;
-    return result;
+    emit songProcessed(song);
 }
 
 
 
-OperationResult FileReceiver::getSongsFromZip(const QString &filePath, QList<Song> &songs) const
+
+
+/*OperationResult FileReceiver::getSongsFromZip(const QString &filePath, QList<Song> &songs) const
 {
     QuaZip zip(filePath);
 
@@ -88,8 +94,8 @@ OperationResult FileReceiver::getSongsFromZip(const QString &filePath, QList<Son
         const QString error {QString("The following errors occured: %1").arg(errors.join("\n"))};
         return OperationResult::fail(error);
     }
-     return OperationResult::succeed();
-}
+    return OperationResult::succeed();
+}*/
 
 OperationResult FileReceiver::getSongFromFileRef(const TagLib::FileRef& fileRef,Song& song) const
 {
@@ -114,9 +120,13 @@ OperationResult FileReceiver::getSongFromFileRef(const TagLib::FileRef& fileRef,
             extractTagFromSong(mpegfile->APETag(),file->name(),song);
             return OperationResult::succeed();
         }
+        extractTagFromSong(mpegfile->tag(),file->name(),song);
+        return OperationResult::succeed();
+    }
 
-        const QString error{ "Cannot read any tags from file. Add a valid mp3 file."};
-        return OperationResult::fail(error);
+    if(TagLib::FLAC::File* flacFile{dynamic_cast<TagLib::FLAC::File*>(file)})
+    {
+        return getSongFromFlacFile(flacFile,song);
     }
 
     const QString error{  "Cannot read any tags from file. Add a valid audio file."};
@@ -167,7 +177,7 @@ OperationResult FileReceiver::getSongFromFlacFile(TagLib::FLAC::File *file, Song
 void FileReceiver::extractTagFromSong(TagLib::Tag *tag, const TagLib::FileName &filename,Song& song) const
 {
     extractTagTextData(tag,filename,song);
-    song.albumCover = QUrl{m_BaseUrl + "/default"}; //no pictures supported
+    song.albumCover = QUrl{m_DefaultUrl}; //no pictures supported
 }
 
 void FileReceiver::extractTagFromSong(TagLib::ID3v2::Tag *tag, const TagLib::FileName &filename,Song& song) const
@@ -185,6 +195,14 @@ void FileReceiver::extractTagFromSong(TagLib::ID3v2::Tag *tag, const TagLib::Fil
         {
             albumArtist = QString::fromStdString(frame->toString().to8Bit(true));
         }
+        else
+        {
+            albumArtist = song.artists;
+        }
+    }
+    else
+    {
+        albumArtist = song.artists;
     }
 
     const QString& albumCoverId{QString{"%1-%2"}.arg(albumArtist,song.album)};
@@ -196,7 +214,10 @@ void FileReceiver::extractTagTextData(TagLib::Tag *tag, const TagLib::FileName &
     song.artists = tag->artist().toCString();
     song.album = tag->album().toCString();
     song.fileName = filename.toString().toCString();
-    song.title = tag->title().toCString();
+
+    QString title{tag->title().toCString()};
+    if(title.isEmpty()) title = QFileInfo{filename.toString().toCString()}.baseName().replace('_', ' ');
+    song.title = title;
     song.year = tag->year();
 }
 
@@ -210,7 +231,7 @@ QString FileReceiver::getAlbumCover(TagLib::ID3v2::Tag* tag,const QString& id) c
     const TagLib::ID3v2::FrameList& frameList{tag->frameList("APIC")};
     if(frameList.isEmpty())
     {
-        return QString{m_BaseUrl + "/default"};
+        return m_DefaultUrl;
     }
     auto pictureFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame *> (frameList.front());
 
@@ -223,10 +244,37 @@ QString FileReceiver::getAlbumCover(TagLib::ID3v2::Tag* tag,const QString& id) c
         );
     if(image.isNull())
     {
-        return QString{m_BaseUrl + "/default"};
+        return m_DefaultUrl;
     }
 
     m_Manager->addImage(id,image);
+    return albumUrl;
+}
+
+QString FileReceiver::getAlbumCover(TagLib::FLAC::File* file, const QString &id) const
+{
+    const QString albumUrl{m_BaseUrl + "/" + id};
+    if(m_Manager->hasImage(id))
+    {
+        return albumUrl;
+    }
+
+    auto picList{file->pictureList()};
+
+    if (picList.isEmpty())
+        return QString{};
+
+    TagLib::FLAC::Picture* pic = picList.front();
+
+    const TagLib::ByteVector& data = pic->data();
+
+    QImage image { QImage::fromData(
+        reinterpret_cast<const uchar*>(data.data()),
+        data.size()
+        )};
+
+    m_Manager->addImage(id,image);
+
     return albumUrl;
 }
 
