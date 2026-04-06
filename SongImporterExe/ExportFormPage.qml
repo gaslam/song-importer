@@ -46,43 +46,33 @@ Page {
                 target: SongListModel
 
                 function onErrorReceived(error) {
-                    errorDialog.addError(error);
+                    addError(error);
                 }
+
+                property var errors: []
+
+                function addError(error) {
+                    let dialog = errorDialogComponent.createObject(root, { errorMessage: error });
+                    if (dialog) dialog.open();
+                }
+
             }
 
         }
 
-        MessageDialog{
-            id:errorDialog
-            text: "A error has occured"
-            property var errors: []
+        Component {
+            id: errorDialogComponent
 
-            function addError(error)
-            {
-                errors.push(error);
-                if(!errorDialog.visible)
-                {
-                    openDialogIfErrorsNotEmpty();
-                }
+            MessageDialog {
+                property string errorMessage: ""
+                text: "An error has occurred"
+                informativeText: errorMessage
+                buttons: MessageDialog.Ok
+
+                onAccepted: destroy()
+                onRejected: destroy()
             }
-
-            function openDialogIfErrorsNotEmpty()
-            {
-                if(errors.length > 0)
-                {
-                    let currError= errors[0];
-                    errorDialog.informativeText = currError;
-                    errorDialog.open();
-                    errors.pop();
-                }
-            }
-
-            onAccepted: {
-                openDialogIfErrorsNotEmpty();
-            }
-
         }
-
 
     }
 }
